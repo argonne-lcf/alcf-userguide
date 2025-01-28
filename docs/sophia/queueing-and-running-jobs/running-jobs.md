@@ -16,7 +16,7 @@ There are three production queues you can target in your `qsub` command (`-q <qu
 | `by-node`     | 1 Node       | 8 Nodes                                  | 5 min    | 12 hr    |
 | `bigmem`      | 1 Node       | 1 Node                                   | 5 min    | 12 hrs   |
 
-!!!  note
+!!! note
 
     For all Sophia queues, `MaxQueued` will be 20 queued or running jobs (per project) and `MaxRunning` will be 5 concurrent jobs (per project)
 

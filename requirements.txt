@@ -4,3 +4,7 @@ mkdocs-video
 mkdocs-include-markdown-plugin
 mkdocs-codeinclude-plugin>=0.2.1
 pymdown-extensions>=10.12
+mkdocs-get-deps
+#mkdocs-git-authors-plugin
+mkdocs-material-extensions
+mkdocs-minify-plugin
