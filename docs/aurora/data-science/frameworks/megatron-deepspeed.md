@@ -1,33 +1,23 @@
 # Megatron-DeepSpeed
 
-[Megatron-DeepSpeed](https://github.com/argonne-lcf/Megatron-DeepSpeed) is a
-scalable, highly performant library for training large language models on _any_ GPU[^any].
+[Megatron-DeepSpeed](https://github.com/argonne-lcf/Megatron-DeepSpeed) is a scalable, highly performant library for training large language models on _any_ GPU[^any].
 
-In particular, it retains the core 4D parallelism[^4d] functionality of the
-[NVIDIA / `Megatron-LM`](https://github.com/NVIDIA/Megatron-LM)
-library, while leveraging the
-[microsoft / `DeepSpeed`](https://github.com/microsoft/DeepSpeed) library for efficient
-scaling and [🍋 saforem2 / `ezpz`](https://github.com/saforem2/ezpz)
-for automated device + backend selection.
+In particular, it retains the core 4D parallelism[^4d] functionality of the [NVIDIA / `Megatron-LM`](https://github.com/NVIDIA/Megatron-LM) library, while leveraging the [microsoft / `DeepSpeed`](https://github.com/microsoft/DeepSpeed) library for efficient scaling and [🍋 saforem2 / `ezpz`](https://github.com/saforem2/ezpz) for automated device + backend selection.
 
-[^4d]: 4D parallelism refers to data (DP), tensor (TP), pipeline (PP), and
-    sequence (SP) parallelism degrees of freedom.
+[^4d]: 4D parallelism refers to data (DP), tensor (TP), pipeline (PP), and sequence (SP) parallelism degrees of freedom.
 
-[^any]: Megatron-DeepSpeed is designed to work on any GPU, including NVIDIA
-    GPUs (NCCL), AMD GPUs (RCCL), and Intel XPUs (CCL).
+[^any]: Megatron-DeepSpeed is designed to work on any GPU, including NVIDIA GPUs (NCCL), AMD GPUs (RCCL), and Intel XPUs (CCL).
 
 ## Getting Started
 
-1. Clone the
-   [argonne-lcf / `Megatron-DeepSpeed`](https://github.com/argonne-lcf/Megatron-DeepSpeed)
-   repository:
+1. Clone the [argonne-lcf / `Megatron-DeepSpeed`](https://github.com/argonne-lcf/Megatron-DeepSpeed) repository:
 
     ```bash
     git clone https://github.com/argonne-lcf/Megatron-DeepSpeed
     cd Megatron-DeepSpeed
     ```
 
-1. Setup your environment:
+1. Set up your environment:
 
     ```bash
     export PBS_O_WORKDIR=$(pwd)
@@ -63,16 +53,13 @@ for automated device + backend selection.
 
       - `TP=2`: Split across 2 Tensor Parallel groups
 
-    - `DATA_FILE_LIST`: Using the
-    [Books corpus](https://github.com/argonne-lcf/Megatron-DeepSpeed/blob/main/ALCF/data-lists/aurora/books.txt)
-    of the Dolma dataset
+    - `DATA_FILE_LIST`: Using the [Books corpus](https://github.com/argonne-lcf/Megatron-DeepSpeed/blob/main/ALCF/data-lists/aurora/books.txt) of the Dolma dataset
 
     ??? note "Overridable Options"
 
         This is a simple subset of the overridable options.
 
-        The full list (as well as their default values) can be found in
-        [ALCF / `helpers.sh`](https://github.com/argonne-lcf/Megatron-DeepSpeed/blob/main/ALCF/helpers.sh)
+        The full list (as well as their default values) can be found in [ALCF / `helpers.sh`](https://github.com/argonne-lcf/Megatron-DeepSpeed/blob/main/ALCF/helpers.sh)
 
         - `DTYPE`: Data type
         - `DATA_FILE_LIST`: Data file list
@@ -107,8 +94,7 @@ for automated device + backend selection.
         - `SP`: Sequence parallelism (Ulysses) degree
         - `TP`: Tensor parallelism degree
         - `TRAIN_TOKENS`: Number of training tokens
-            - `TRAIN_ITERS`: Number of training iterations
+        - `TRAIN_ITERS`: Number of training iterations
         - `USE_ACTIVATION_CHECKPOINTING`: Use activation checkpointing
         - `WEIGHT_DECAY`: Weight decay
         - `ZERO_STAGE`: Zero stage
-

@@ -1,20 +1,18 @@
 # Profiling Deep Learning Applications
 
-On Aurora we can use the `unitrace` profiler from Intel to profile deep learning applications. Refer to the [`unitrace` documentation page](https://github.com/intel/pti-gpu/tree/master/tools/unitrace)
-for details.
+On Aurora, we can use the `unitrace` profiler from Intel to profile deep learning applications. Refer to the [`unitrace` documentation page](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) for details.
 
 ## Example Usage
 
-We can use `unitrace` to trace an application running on multiple ranks and 
-multiple nodes. A simple example, where we use a wrapper script to trace the
-rank 0 on each node of a 4 node job running a PyTorch application is below.
+We can use `unitrace` to trace an application running on multiple ranks and multiple nodes. A simple example, where we use a wrapper script to trace rank 0 on each node of a 4-node job running a PyTorch application, is below.
 
 There are several important shell variables in the wrapper, which may require modification:
-```bash linenums="1" title="unitrace_wrapper.sh"
+
+```bash
 #!/bin/bash
 ## This wrapper should be used with unitrace to trace in any number of nodes.
-## The script for this example is set up to trace rank 0 of first 4 Nodes in the case of
-## profiling a job running on larger than 4 nodes.
+## The script for this example is set up to trace rank 0 of the first 4 nodes in the case of
+## profiling a job running on more than 4 nodes.
 FNAME_EXT=$(basename "$2")
 FNAME="${FNAME_EXT%%.*}"
 
@@ -33,7 +31,6 @@ UNITRACE_OPTS=" --ccl-summary-report --chrome-mpi-logging --chrome-sycl-logging 
 --chrome-ccl-logging --chrome-call-logging --chrome-dnn-logging --device-timing --host-timing \
 --output-dir-path ${UNITRACE_OUTDIR} --output ${UNITRACE_OUTDIR}/UNITRACE_${FNAME}_n${NNODES}_${DTAG}.txt "  # (2)!
 
-
 export LD_LIBRARY_PATH=${UNITRACE_LIB}:${UNITRACE_BIN}:$LD_LIBRARY_PATH
 
 # Use $PMIX_RANK for MPICH and $SLURM_PROCID with srun.
@@ -48,27 +45,16 @@ else
 fi
 ```
 
-1. `UNITRACE_DIR`: This is the main `unitrace` directory, which may change after
-an update to the programming environment.
-2. `UNITRACE_OPTS`: These are the options that `unitrace` uses to trace data at
-different levels. Based on the number of options, the sizes of the output 
-profiles will vary. Usually enabling more options lead to a larger profile 
-(in terms of storage in MB).
-3. `PROFRANK`: As implemented, this variable is set by the user to trace the rank
-of choice. For example, this wrapper will trace the rank 0 on each node.
-4. `RANKCUTOFF`: This variable is Aurora specific. As we can run as many as 12
-ranks per node (without using CCS), the first 4 nodes of a job will have 48 
-ranks running. This provides the upper cutoff of the label (in number) of ranks,
-beyond which `unitrace` will not trace any rank. An user can change the number
-according to the number of maximum ranks running per node to set up how many 
-ranks to be traced. `unitrace` will produce a profile (`json` file, by default) per traced 
-rank. This profile can be viewed using the [Perfetto trace viewer](https://ui.perfetto.dev/)
+1. `UNITRACE_DIR`: This is the main `unitrace` directory, which may change after an update to the programming environment.
+2. `UNITRACE_OPTS`: These are the options that `unitrace` uses to trace data at different levels. Based on the number of options, the sizes of the output profiles will vary. Usually, enabling more options leads to a larger profile (in terms of storage in MB).
+3. `PROFRANK`: As implemented, this variable is set by the user to trace the rank of choice. For example, this wrapper will trace rank 0 on each node.
+4. `RANKCUTOFF`: This variable is Aurora-specific. As we can run as many as 12 ranks per node (without using CCS), the first 4 nodes of a job will have 48 ranks running. This provides the upper cutoff of the label (in number) of ranks, beyond which `unitrace` will not trace any rank. A user can change the number according to the number of maximum ranks running per node to set up how many ranks to be traced. `unitrace` will produce a profile (`json` file, by default) per traced rank. This profile can be viewed using the [Perfetto trace viewer](https://ui.perfetto.dev/).
 
 ### Deployment
 
 The wrapper above can be deployed using the following PBS job script:
 
-```bash linenums="1" title="job_script.sh"
+```bash
 #!/bin/bash -x
 #PBS -l select=4
 #PBS -l place=scatter

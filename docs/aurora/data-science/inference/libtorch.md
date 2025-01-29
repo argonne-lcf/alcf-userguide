@@ -1,39 +1,39 @@
 # LibTorch C++ Library
 
-LibTorch is a C++ library for Torch, with many of the API that are available in PyTorch. Users can find more information on the [PyTorch documentation](https://pytorch.org/cppdocs/installing.html).
-This is useful to integrate the Torch ML framework into traditional HPC simulation codes and therefore enable training and inferecing of ML models.
-On Aurora, the Intel Extension for PyTorch (IPEX) library is needed to access the Max 1550 GPU, which have the device name `kXPU` in LibTorch. 
-During compilation, Intel optimizations will be activated automatically once the IPEX dynamic library is linked.
-
+LibTorch is a C++ library for Torch, with many of the APIs that are available in PyTorch. Users can find more information in the [PyTorch documentation](https://pytorch.org/cppdocs/installing.html). This is useful for integrating the Torch ML framework into traditional HPC simulation codes and therefore enables training and inference of ML models. On Aurora, the Intel Extension for PyTorch (IPEX) library is needed to access the Max 1550 GPU, which has the device name `kXPU` in LibTorch. During compilation, Intel optimizations will be activated automatically once the IPEX dynamic library is linked.
 
 ## Environment Setup
 
-To use LibTorch on Aurora, load the ML frameworks module
+To use LibTorch on Aurora, load the ML frameworks module:
+
 ```bash
 module load frameworks
 ```
-which will also load the consistent oneAPI SDK (version 2024.2) and `cmake`.
 
+This will also load the consistent oneAPI SDK (version 2024.2) and `cmake`.
 
 ## Torch and IPEX libraries
 
-With the ML frameworks module loaded as shown above, run
+With the ML frameworks module loaded as shown above, run:
+
 ```bash
 python -c 'import torch; print(torch.__path__[0])'
-python -c 'import torch;print(torch.utils.cmake_prefix_path)'
+python -c 'import torch; print(torch.utils.cmake_prefix_path)'
 ```
+
 to find the path to the Torch libraries, include files, and CMake files.
 
-For the path to the IPEX dynamic library, run
+For the path to the IPEX dynamic library, run:
+
 ```bash
 python -c 'import torch; print(torch.__path__[0].replace("torch","intel_extension_for_pytorch"))'
 ```
 
-
 ## Linking LibTorch and IPEX Libraries
 
-When using the CMake build system, LibTorch and IPEX libraries can be linked to an example C++ application using the following `CMakeLists.txt` file
-```bash
+When using the CMake build system, LibTorch and IPEX libraries can be linked to an example C++ application using the following `CMakeLists.txt` file:
+
+```cmake
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 cmake_policy(SET CMP0074 NEW)
 project(project-name)
@@ -52,22 +52,21 @@ target_link_libraries(exe ${TORCH_LIBS})
 set_property(TARGET exe PROPERTY CXX_STANDARD 17)
 ```
 
-and configuring the build with 
-```
+and configuring the build with:
+
+```bash
 cmake \
-    -DCMAKE_PREFIX_PATH=`python -c 'import torch;print(torch.utils.cmake_prefix_path)'` \
+    -DCMAKE_PREFIX_PATH=`python -c 'import torch; print(torch.utils.cmake_prefix_path)'` \
     -DINTEL_EXTENSION_FOR_PYTORCH_PATH=`python -c 'import torch; print(torch.__path__[0].replace("torch","intel_extension_for_pytorch"))'` \
     ./
 make
 ```
 
-
 ## Device Introspection
 
-Similarly to PyTorch, LibTorch provides API to perform instrospection on the devices available on the system.
-The simple code below shows how to check if XPU devices are available, how many are present, and how to loop through them to discover some properties.
+Similarly to PyTorch, LibTorch provides APIs to perform introspection on the devices available on the system. The simple code below shows how to check if XPU devices are available, how many are present, and how to loop through them to discover some properties.
 
-```c++
+```cpp
 #include <torch/torch.h>
 #include <c10/xpu/XPUFunctions.h>
 
@@ -100,11 +99,10 @@ int main(int argc, const char* argv[])
 }
 ```
 
+## Model Inferencing Using the Torch API
 
-## Model Inferencing Using the Torch API 
+This example shows how to perform inference with the ResNet50 model using LibTorch. First, get a JIT-traced version of the model by executing `python resnet50_trace.py` (shown below) on a compute node.
 
-This example shows how to perform inference with the ResNet50 model using LibTorch.
-First, get a jit-traced version of the model executing `python resnet50_trace.py` (shown below) on a compute node.
 ```python
 import torch
 import torchvision
@@ -128,8 +126,9 @@ print(f"Inference time: {toc-tic}")
 torch.jit.save(model_jit, f"resnet50_jit.pt")
 ```
 
-Then, build `inference-example.cpp` (shown below)
-```c++
+Then, build `inference-example.cpp` (shown below):
+
+```cpp
 #include <torch/torch.h>
 #include <torch/script.h>
 
@@ -153,7 +152,7 @@ int main(int argc, const char* argv[]) {
   torch::Tensor input_tensor = torch::rand({1,3,224,224}, options);
   assert(input_tensor.dtype() == torch::kFloat32);
   assert(input_tensor.device().type() == torch::kXPU);
-  std::cout << "Created the input tesor on GPU\n";
+  std::cout << "Created the input tensor on GPU\n";
 
   torch::Tensor output = model.forward({input_tensor}).toTensor();
   std::cout << "Performed inference\n\n";
@@ -167,14 +166,13 @@ int main(int argc, const char* argv[]) {
 
 and execute it with `./inference-example ./resnet50_jit.pt`.
 
-
 ## LibTorch Interoperability with SYCL Pipelines
 
-The LibTorch API can be integrated with data pilelines using SYCL to operate on input and output data already offloaded to the Intel Max 1550 GPU. 
-The code below extends the above example of performing inference with the ResNet50 model by first generating the input data on the CPU, then offloading it to the GPU with SYCL, and finally passing the device pointer to LibTorch for inference using `torch::from_blob()`, which create a Torch tensor from a data pointer with zero-copy.
+The LibTorch API can be integrated with data pipelines using SYCL to operate on input and output data already offloaded to the Intel Max 1550 GPU. The code below extends the above example of performing inference with the ResNet50 model by first generating the input data on the CPU, then offloading it to the GPU with SYCL, and finally passing the device pointer to LibTorch for inference using `torch::from_blob()`, which creates a Torch tensor from a data pointer with zero-copy.
 
-The source code for `inference-example.cpp` is modified as follows
-```c++
+The source code for `inference-example.cpp` is modified as follows:
+
+```cpp
 #include <torch/torch.h>
 #include <torch/script.h>
 #include <iostream>
@@ -238,7 +236,7 @@ int main(int argc, const char* argv[]) {
                                  options);
   assert(input_tensor.dtype() == torch::kFloat32);
   assert(input_tensor.device().type() == torch::kXPU);
-  std::cout << "Created the input Torch tesor on GPU\n\n";
+  std::cout << "Created the input Torch tensor on GPU\n\n";
 
   // Perform inference
   torch::NoGradGuard no_grad; // equivalent to "with torch.no_grad():" in PyTorch
@@ -255,20 +253,12 @@ int main(int argc, const char* argv[]) {
 }
 ```
 
-Note that an additional C++ flag is needed in this case, as shown below in the `cmake` command
+Note that an additional C++ flag is needed in this case, as shown below in the `cmake` command:
+
 ```bash
 cmake \
     -DCMAKE_CXX_FLAGS="-std=c++17 -fsycl" \
-    -DCMAKE_PREFIX_PATH=`python -c 'import torch;print(torch.utils.cmake_prefix_path)'` \
+    -DCMAKE_PREFIX_PATH=`python -c 'import torch; print(torch.utils.cmake_prefix_path)'` \
     -DINTEL_EXTENSION_FOR_PYTORCH_PATH=`python -c 'import torch; print(torch.__path__[0].replace("torch","intel_extension_for_pytorch"))'` \
     ./
 ```
-
-
-
-
-
-
-
-
-

@@ -1,13 +1,13 @@
 # Dask
 
 [Dask](https://www.dask.org/) is a Python library for parallel and distributed computing. 
-A Dask cluster is composed by one scheduler that coordinates the job of many workers, which can have access to CPU or GPU resources. 
+A Dask cluster is composed of one scheduler that coordinates the job of many workers, which can have access to CPU or GPU resources. 
 Here we show how to install Dask in a conda environment on Aurora and how to start a cluster with GPU workers and run a simple example script. 
 
 ## Install Dask on Aurora
 
 From one of Aurora's login nodes, use the following commands to create a conda environment and install Dask. 
-This will also install other libraries needed to run an example script, and create a Jupyter kernel that allows to work interactively from a notebook. 
+This will also install other libraries needed to run an example script and create a Jupyter kernel that allows you to work interactively from a notebook. 
 
 ```bash linenums="1"
 module load frameworks
@@ -39,7 +39,7 @@ chmod a+x ./start_dask_aurora.sh
 
 WORKER_TYPE=$1
 NUM_WORKERS_PER_NODE=$2
-# if using 12 GPU workers, assign one worker per tile, otherwise uses one worker per GPU (2 tiles)
+# if using 12 GPU workers, assign one worker per tile, otherwise use one worker per GPU (2 tiles)
 if [ $NUM_WORKERS_PER_NODE = 12 ] && [ $WORKER_TYPE = 'gpu' ]; then
     export ZE_FLAT_DEVICE_HIERARCHY=FLAT
     export ZE_ENABLE_PCI_ID_DEVICE_ORDER=1
@@ -105,12 +105,12 @@ In this example, we will [estimate Pi using a Monte Carlo method](https://en.wik
 Paste the following Python script into a file called `pi_dask_gpu.py`. Here is a breakdown of what the script does:
 
 1. It connects to the Dask cluster (that you should start beforehand) and prints some information including the number of workers and available memory.
-1. It divides the total number of points to sample between the workers, and each worker uses its GPU to
+2. It divides the total number of points to sample between the workers, and each worker uses its GPU to
    - generate random points uniformly inside the unit square
    - return the number of points that are inside the unit circle
-1. When the results from the workers are ready, they are aggregated to compute Pi.
-1. A total of 5 Pi calculations are performed and timed (the very first iterations will incur in initialization and warmup costs).
-1. At the end, the Dask cluster is shut down.
+3. When the results from the workers are ready, they are aggregated to compute Pi.
+4. A total of 5 Pi calculations are performed and timed (the very first iterations will incur initialization and warmup costs).
+5. At the end, the Dask cluster is shut down.
 
 ```python linenums="1" title="pi_dask_gpu.py"
 import json
@@ -169,7 +169,7 @@ client.shutdown()
 
 - First, request an interactive job on 1 node.
 - Then, [start a Dask cluster with 6 GPU workers](#start-a-cluster-with-gpu-workers) and wait about 10 seconds for the cluster to start.
-- Press ++ctrl+z++ (SIGTSTP) and then execute `bg` to continue running the process to the background, or open a new shell and SSH onto the compute node. 
+- Press ++ctrl+z++ (SIGTSTP) and then execute `bg` to continue running the process in the background, or open a new shell and SSH onto the compute node. 
 - Run the example script:
   ```bash linenums="1"
   module load frameworks
@@ -194,7 +194,7 @@ Here are the steps to start a Dask cluster and connect to it interactively from 
 
 - First, request an interactive job on 1 node. Print the compute node's hostname (that you get with the command `hostname`), which will be used later.
 - Then, [start a Dask cluster](#start-a-cluster-with-gpu-workers) and wait about 10 seconds for the cluster to start.
-- **On your local machine**, open a SSH tunnel to the compute node (`COMPUTE_NODE` is the compute node's hostname and `YOUR_ALCF_USERNAME` is your ALCF username):
+- **On your local machine**, open an SSH tunnel to the compute node (`COMPUTE_NODE` is the compute node's hostname and `YOUR_ALCF_USERNAME` is your ALCF username):
   ```bash
   ssh -t -L 23456:localhost:23456 -L 8787:localhost:8787 YOUR_ALCF_USERNAME@bastion.alcf.anl.gov ssh -t -L 23456:localhost:23456 -L 8787:localhost:8787 login.aurora.alcf.anl.gov ssh -t -L 23456:localhost:23456 -L 8787:localhost:8787 COMPUTE_NODE
   ```
@@ -208,8 +208,8 @@ Here are the steps to start a Dask cluster and connect to it interactively from 
   conda activate dask
   jupyter lab --no-browser --port=23456
   ```
-- Copy the line starting with `http://localhost:23456/lab?token=<TOKEN>` at the end of the jupyter command's output.
-- **On your local machine**, open a browser window and go to that url.
+- Copy the line starting with `http://localhost:23456/lab?token=<TOKEN>` at the end of the Jupyter command's output.
+- **On your local machine**, open a browser window and go to that URL.
 - **On the JupyterLab page**, select the `dask` kernel and use this script to connect to the Dask cluster:
   ```python linenums="1"
   import json
@@ -223,4 +223,3 @@ Here are the steps to start a Dask cluster and connect to it interactively from 
   client
   ```
 - The [Dask dashboard](https://docs.dask.org/en/latest/dashboard.html) will be available at <http://localhost:8787>
-

@@ -1,8 +1,6 @@
-#  PyTorch Geometric (PyG)
+# PyTorch Geometric (PyG)
 
-[PyTorch Geometric (PyG)](https://pyg.org/) is a Python library built on top of PyTorch for deep learning on graphs. 
-It provides tools for working with graph-structured data, and implementations of many Graph Neural Networks (GNNs). 
-
+[PyTorch Geometric (PyG)](https://pyg.org/) is a Python library built on top of PyTorch for deep learning on graphs. It provides tools for working with graph-structured data and implementations of many Graph Neural Networks (GNNs).
 
 ## PyG on Aurora
 
@@ -11,18 +9,15 @@ PyTorch Geometric includes a base library, called [`torch_geometric`](https://gi
 - [`torch_sparse`](https://github.com/rusty1s/pytorch_sparse)
 - [`torch_cluster`](https://github.com/rusty1s/pytorch_cluster)
 - [`torch_spline_conv`](https://github.com/rusty1s/pytorch_spline_conv)
-- [`pyg_lib`](https://github.com/pyg-team/pyg-lib) 
+- [`pyg_lib`](https://github.com/pyg-team/pyg-lib)
 
-The [base library](#pyg-base-library), `torch_geometric`, relies solely on PyTorch and can utilize Intel GPUs through the `xpu` device specification. 
+The [base library](#pyg-base-library), `torch_geometric`, relies solely on PyTorch and can utilize Intel GPUs through the `xpu` device specification.
 
-The [optional dependencies](#optional-dependencies) include optimized operations that are relevant to GNNs and are missing in PyTorch. 
-They have only CPU and CUDA implementations and can therefore only run on Aurora CPUs. 
+The [optional dependencies](#optional-dependencies) include optimized operations that are relevant to GNNs and are missing in PyTorch. They have only CPU and CUDA implementations and can therefore only run on Aurora CPUs.
 
+## PyG base library
 
-## PyG base library 
-
-Here we explain how to install the base library, `torch_geometric`, on Aurora and show a simple example of training a PyG model on Intel GPUs. 
-
+Here we explain how to install the base library, `torch_geometric`, on Aurora and show a simple example of training a PyG model on Intel GPUs.
 
 ### Installing `torch_geometric` on Aurora
 
@@ -35,13 +30,12 @@ source venv/bin/activate
 pip install torch_geometric
 ```
 
-
 ### Example
 
-The following example is inspired by the [`gcn.py` example](https://github.com/pyg-team/pytorch_geometric/blob/master/examples/gcn.py) on the PyG repository. 
+The following example is inspired by the [`gcn.py` example](https://github.com/pyg-team/pytorch_geometric/blob/master/examples/gcn.py) on the PyG repository.
 
-- Copy the following Python script into a  file called `gcn.py`.
-  ```python title="gcn.py"
+- Copy the following Python script into a file called `gcn.py`.
+  ```python
   # gcn.py
   import argparse
   import time
@@ -61,7 +55,7 @@ The following example is inspired by the [`gcn.py` example](https://github.com/p
   parser.add_argument('--num_classes', type=int, default=100)
   args = parser.parse_args()
   
-  device = torch_geometric.device(args.device)
+  device = torch.device(args.device)
   print(f"device: {device}")
   
   edge_index = torch.randint(args.num_nodes, size=(args.num_edges, 2), dtype=torch.long)
@@ -69,7 +63,6 @@ The following example is inspired by the [`gcn.py` example](https://github.com/p
   y = torch.randint(args.num_classes, size=(args.num_nodes,), dtype=torch.long)
   data = torch_geometric.data.Data(x=x, edge_index=edge_index.t().contiguous(), y=y, num_classes=(y.max()+1).item())
   data = data.to(device)
-  
   
   class GCN(torch.nn.Module):
       def __init__(self, in_channels, hidden_channels, out_channels):
@@ -83,7 +76,6 @@ The following example is inspired by the [`gcn.py` example](https://github.com/p
           x = torch.nn.functional.dropout(x, p=0.5, training=self.training)
           x = self.conv2(x, edge_index, edge_weight)
           return x
-  
   
   model = GCN(
       in_channels=data.num_features,
@@ -106,7 +98,6 @@ The following example is inspired by the [`gcn.py` example](https://github.com/p
       optimizer.step()
       return float(loss)
   
-  
   times = []
   for epoch in range(1, args.epochs + 1):
       start = time.time()
@@ -115,7 +106,7 @@ The following example is inspired by the [`gcn.py` example](https://github.com/p
   print(f'Median time per epoch: {torch.tensor(times).median():.4f}s')
   ```
 - [Start an interactive job](../../running-jobs-aurora.md#submitting-a-job) on one node.
-- Load the frameworks module, activate the virtual environment and run the script:
+- Load the frameworks module, activate the virtual environment, and run the script:
   ```bash
   module load frameworks
   source venv/bin/activate
@@ -126,8 +117,7 @@ The following example is inspired by the [`gcn.py` example](https://github.com/p
   device: xpu
   Median time per epoch: 0.2721s
   ```
-- To run on the CPU use `python gcn.py --device cpu`.
-
+- To run on the CPU, use `python gcn.py --device cpu`.
 
 ## Optional dependencies
 
@@ -172,5 +162,3 @@ for lib in "${libs[@]}"; do
     rm -rf "$LIB_NAME"
 done
 ```
-
-
