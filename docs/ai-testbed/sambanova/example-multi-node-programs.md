@@ -1,4 +1,4 @@
-# Example Multi-Node Programs
+a cd # Example Multi-Node Programs
 
 In this section we will learn how to extend the UNet2d and Gpt1.5B applications scripts that we introduced in the [Example Programs](./example-programs.md) to compile and run multiple instances of the model in a data parallel fashion across multiple tiles or across multiple nodes.
 
@@ -20,7 +20,7 @@ Copy and paste the contents of [Unet2d.sh](./files/Unet2d.sh "Unet2d.sh") and [u
 to files with the same name into the current directory using your favorite editor.
 
 ```bash
-chmod +x Unet2d.sh
+ch    cd mod +x Unet2d.sh
 chmod +x unet_batch.sh
 ```
 
@@ -96,7 +96,7 @@ cd ~/nlp-multiNodetest
 ### Create and run Gpt1.5B_compile.sh and Gpt1.5B_run.sh
 
 Create the files **Gpt1.5B_compile.sh** and **Gpt1.5B_run.sh** in the current directory.
-Copy the contents of [Gpt1.5B_compile.sh](./files/Gpt1.5B_compile.sh) and [Gpt1.5B_run.sh](./files/Gpt1.5B_run.sh). Alternatively, the files can be accessed at `/data/ANL/scripts/Gpt1.5B_compile.sh` and `/data/ANL/scripts/Gpt1.5B_run.sh` on any of the compute node and can be copied over to the working directory.
+Copy the contents of [Gpt1.5B_compile.sh](./files/Gpt1.5B_compile.sh) and [Gpt1.5B_run.sh](./files/Gpt1.5B_run.sh). Alternatively, the files can be accessed at `/data/ANL/scripts/1.23.5-46/legacy_models/Gpt1.5B_compile.sh` and `/data/ANL/scripts/1.23.5-46/legacy_models/Gpt1.5B_run.sh` on any of the compute node and can be copied over to the working directory.
 
 ### Compile and Run
 
