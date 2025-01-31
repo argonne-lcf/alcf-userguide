@@ -1,0 +1,54 @@
+/*body { overflow-x: hidden; font-family: 'Proxima Nova'; }*/
+/* Custom colors */
+/*$primary: {{ site.data.style.highlight | default: "#fed136" }} !default;
+$white: {{ site.data.style.white | default: "#fff" }} !default;
+$black: {{ site.data.style.black | default: "#000" }} !default;*/
+/*.text-primary { color: #009f90 !important; }*/
+header.md-header { background-color: #212529; color: #009f90;}
+.md-header-nav__title {font-weight: 600;}
+nav.md-tabs { background-color: #212529; color: #b8e2de;}
+label.md-search__icon.md-icon {color: #b8e2de;}
+a.md-nav__link.md-nav__link--active {color: #009f90;}
+/*.md-nav__link.md-nav__link--hover {color: #006b61;}*/
+a {color: #009f90;}
+.md-nav__link:focus {
+    color: #009f90;
+}
+.md-nav__link:hover {color: #006b61;}
+.md-typeset a, a:focus {
+    color: #009f90;
+}
+.md-typeset a:hover {color: #006b61;}
+html .md-footer-meta.md-typeset a:focus, html .md-footer-meta.md-typeset a {color: #b8e2de;}
+
+.md-announce, .md-footer, .md-footer-meta {background-color: #212529;}
+
+.md-header-nav__button.md-logo svg {display: none;}
+
+/*Hiding everything in left nav except for systems*/
+.md-nav__item:nth-child(1) {display: none;}
+.md-nav__item:nth-child(2) {display: none;}
+.md-nav__item:nth-child(3) {display: none;}
+.md-nav__item:nth-child(7) {display: none;}
+.md-nav__item:nth-child(8) {display: none;}
+
+/*Hide Graphcore in Header Nav*/
+.md-tabs__item:nth-child(4) {display: none;}
+
+/*Change Header Nav Tabs Color*/
+.md-tabs__link {color: white;}
+
+/*This is the command to display correct font*/
+body, input {
+font-family: Proxima Nova,Montserrat,Arial,sans-serif;
+}
+
+/*Hide Table of Contents*/
+.md-sidebar--secondary {
+  display: none;
+}
+
+/*.md-header-nav__button.md-logo img {
+    width: 4.2rem;
+    height: 1.2rem;
+}*/

@@ -1,0 +1,73 @@
+<Servers>
+  <Server name="SOPHIA@ANL" resource="csrc://localhost:11111" timeout="-1">
+    <CommandStartup>
+      <Options>
+        <Option name="XTERM_EXE" label="Xterm executable" save="true">
+          <File default="/usr/X11/bin/xterm"/>
+        </Option>
+        <Option name="SSH_EXE" label="SSH executable" save="true">
+          <File default="ssh"/>
+        </Option>
+        <Option name="MACHINE" label="Remote machine" save="true">
+          <String default="sophia.alcf.anl.gov"/>
+        </Option>
+        <Option name="USER" label="Username" save="true">
+          <String default="YOURUSERNAME"/>
+        </Option>
+        <Option name="VERSION" label="ParaView version" save="true">
+          <String default="5.13.1-EGL"/>
+        </Option>
+        <Option name="CLIENT_PORT" label="Client port">
+          <Range type="int" min="1025" max="65535" step="1" default="11111"/>
+        </Option>
+        <Option name="SERVER_PORT" label="Server port">
+          <Range type="int" min="1025" max="65535" step="1" default="random"/>
+        </Option>
+        <Option name="NUMNODES" label="Number of nodes to reserve" save="true">
+          <Range type="int" min="1" max="24" step="1" default="1"/>
+        </Option>
+        <Option name="RANKSPERNODE" label="Number of ranks per node" save="true">
+          <Range type="int" min="1" max="8" step="1" default="1"/>
+        </Option>
+        <Option name="NUMMINUTES" label="Number of minutes to reserve" save="true">
+          <Range type="int" min="5" max="1000" step="5" default="20"/>
+        </Option>
+        <Option name="ACCOUNT" label="Account" save="true">
+          <String default="YOURPROJECT"/>
+        </Option>
+        <Option name="QUEUE" label="Queue" save="true">
+          <String default="by-gpu"/>
+        </Option>
+        <Option name="FILE_SYSTEMS" label="File Systems" save="true">
+          <String default="home:eagle:grand"/>
+        </Option>
+        <Option name="JOBNAME" label="Job name" save="true">
+          <String default="paraview_server"/>
+        </Option>
+      </Options>
+      <Command exec="$XTERM_EXE$" timeout="0" delay="0" Arguments="0" process_wait="0">
+        <Arguments>
+          <Argument value="-T"/>
+          <Argument value="&#x22;ParaView"/>
+          <Argument value="$REMOTE_USER$@sophia&#x22;"/>
+          <Argument value="-e"/>
+          <Argument value="$SSH_EXE$"/>
+          <Argument value="-R"/>
+          <Argument value="$SERVER_PORT$:localhost:$CLIENT_PORT$"/>
+          <Argument value="$USER$@$MACHINE$"/>
+          <Argument value="/soft/visualization/paraview/connect/launch.sh"/>
+          <Argument value="$NUMNODES$"/>
+          <Argument value="$RANKSPERNODE$"/>
+          <Argument value="$NUMMINUTES$"/>
+          <Argument value="$ACCOUNT$"/>
+          <Argument value="$QUEUE$"/>
+          <Argument value="$JOBNAME$"/>
+          <Argument value="$SERVER_PORT$"/>
+          <Argument value="$FILE_SYSTEMS$"/>
+          <Argument value="pvserver"/>
+          <Argument value="$VERSION$"/>
+        </Arguments>
+      </Command>
+    </CommandStartup>
+  </Server>
+</Servers>

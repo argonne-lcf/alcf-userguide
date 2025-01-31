@@ -1,0 +1,221 @@
+---
+common_options: &common_options
+  data:
+    throughput:
+      regexp: 'throughput: *(.*?) samples\/sec'
+      skip: 1
+    accuracy:
+      reduction_type: "final"
+      regexp: 'accuracy: *(.*?) \%'
+    loss:
+      reduction_type: "final"
+      regexp: 'loss: *(\d*\.\d*)'
+  output:
+    - [samples/sec, "throughput"]
+    - [accuracy, "accuracy"]
+    - [loss, "loss"]
+  env:
+    POPLAR_ENGINE_OPTIONS: '{"opt.enableMultiAccessCopies":"false"}'
+    PYTORCH_CACHE_DIR: "./pt_cache/"
+
+config_options: &config_options
+  requirements_path: requirements.txt
+  required_apt_packages_path: required_apt_packages.txt
+  pre_run_commands: [make install, make install-turbojpeg]
+
+pytorch_resnet50_train_real_1:
+  <<: [*common_options, *config_options]
+  description: ResNet training on 1 Mk2 IPU, real data.
+  cmd: >-
+    python3 train.py
+      --config resnet50
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 20
+      --validation-mode none
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+
+pytorch_resnet50_train_real_2:
+  <<: [*common_options, *config_options]
+  description: ResNet training on 2 Mk2 IPUs, real data.
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=2
+      --num-replicas=2
+      --executable-cache-path=$PYTORCH_CACHE_DIR
+    python3 train.py
+      --config resnet50
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 20
+      --validation-mode none
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+
+pytorch_resnet50_train_real_4:
+  <<: [*common_options, *config_options]
+  description: ResNet training on 4 Mk2 IPUs, real data.
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=4
+      --num-replicas=4
+      --executable-cache-path=$PYTORCH_CACHE_DIR
+    python3 train.py
+      --config resnet50
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 20
+      --validation-mode none
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+
+pytorch_resnet50_train_real_8:
+  <<: [*common_options, *config_options]
+  description: ResNet training on 8 Mk2 IPUs, real data.
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=8
+      --num-replicas=8
+      --executable-cache-path=$PYTORCH_CACHE_DIR
+    python3 train.py
+      --config resnet50
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 20
+      --validation-mode none
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+
+pytorch_resnet50_train_real_pod16:
+  <<: [*common_options, *config_options]
+  description: ResNet training on 16 Mk2 IPUs, real data.
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=16
+      --num-replicas=16
+      --executable-cache-path=$PYTORCH_CACHE_DIR
+    python3 train.py
+      --config resnet50
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 20
+      --validation-mode none
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+
+pytorch_resnet50_train_real_pod64:
+  <<: [*common_options, *config_options]
+  description: |
+    ResNet training on 64 Mk2 IPUs with real data
+    for convergence testing.
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=32
+      --num-replicas=64
+      --vipu-server-host=$IPUOF_VIPU_API_HOST
+      --host=$HOSTS
+      --vipu-server-port 8090
+      --vipu-partition=$IPUOF_VIPU_API_PARTITION_ID
+      --vipu-cluster=$VIPU_CLUSTER_ID
+      --update-partition=yes
+      --remove-partition=yes
+      --reset-partition=no
+      --sync-type=ST_POD_NATIVE_DEFAULT
+      --executable-cache-path=$PYTORCH_CACHE_DIR
+      --mpi-global-args="
+            --mca oob_tcp_if_include $TCP_IF_INCLUDE
+            --mca btl_tcp_if_include $TCP_IF_INCLUDE"
+      --mpi-local-args="
+        -x LD_LIBRARY_PATH
+        -x OPAL_PREFIX
+        -x PATH
+        -x CPATH
+        -x PYTHONPATH
+        -x POPLAR_ENGINE_OPTIONS
+        -x IPUOF_VIPU_API_TIMEOUT=800"
+    python3 train.py
+      --config resnet50-pod64
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 20
+      --validation-mode none
+
+pytorch_resnet50_train_real_pod64_conv:
+  <<: [*common_options, *config_options]
+  description: |
+    ResNet training on 64 Mk2 IPUs with real data
+    for convergence testing.
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=32
+      --num-replicas=64
+      --vipu-server-host=$IPUOF_VIPU_API_HOST
+      --host=$HOSTS
+      --vipu-server-port 8090
+      --vipu-partition=$IPUOF_VIPU_API_PARTITION_ID
+      --vipu-cluster=$VIPU_CLUSTER_ID
+      --update-partition=yes
+      --remove-partition=yes
+      --reset-partition=no
+      --sync-type=ST_POD_NATIVE_DEFAULT
+      --executable-cache-path=$PYTORCH_CACHE_DIR
+      --mpi-global-args="
+            --mca oob_tcp_if_include $TCP_IF_INCLUDE
+            --mca btl_tcp_if_include $TCP_IF_INCLUDE"
+      --mpi-local-args="
+        -x LD_LIBRARY_PATH
+        -x OPAL_PREFIX
+        -x PATH
+        -x CPATH
+        -x PYTHONPATH
+        -x POPLAR_ENGINE_OPTIONS
+        -x IPUOF_VIPU_API_TIMEOUT=800"
+    python3 train.py
+      --config resnet50-pod64
+      --dataloader-worker 14
+      --dataloader-rebatch-size 256
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --checkpoint-output-dir ./checkpoints
+      --wandb
+      --validation-mode none
+
+pytorch_efficientnet_b0_train_real_pod16:
+  <<: [*common_options, *config_options]
+  description: |
+    EfficientNet-B0-G16-GN training pipelined on 4 IPU-Ms (16 IPUs)
+    using real data
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=4
+      --num-replicas=8
+      --ipus-per-replica=2
+    python3 train.py
+      --config efficientnet-b0-g16-gn-pod16
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 2
+      --warmup-epoch 0
+      --validation-mode none
+      --weight-avg-strategy none
+
+pytorch_efficientnet_b4_g16_train_real_pod16:
+  <<: [*common_options, *config_options]
+  description: |
+    EfficientNet-B4-G16-GN training pipelined on 4 IPU-Ms (16 IPUs)
+    using real data
+  cmd: >-
+    poprun
+      -vv
+      --num-instances=2
+      --num-replicas=8
+      --ipus-per-replica=2
+    python3 train.py
+      --config efficientnet-b4-g16-gn-pod16
+      --imagenet-data-path $DATASETS_DIR/imagenet-raw-dataset
+      --epoch 2
+      --warmup-epoch 0
+      --validation-mode none
+      --weight-avg-strategy none
