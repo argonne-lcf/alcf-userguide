@@ -33,7 +33,7 @@ cd ~/sambanova/modelzoo
 export TARGET_SAMBAFLOW_VERSION=$((rpm -q sambanova-runtime 2>/dev/null || dpkg -s sambanova-runtime 2>/dev/null) | egrep -m 1 -o "[0-9]+\.[0-9]+\.[0-9]+")
 echo $TARGET_SAMBAFLOW_VERSION
 # should be of the form 1.19.1
-./start_container.sh -b /data/ANL/openwebtext/hdf5/hdf5:/opt/datasets/openweb_hdf54096/ -b  /software:/software / /software/sambanova/singularity/images/llm-modelzoo/Modelzoo/ModelzooDevbox_1.sif
+./start_container.sh -b /data/ANL/openwebtext/hdf5/hdf5:/opt/datasets/openweb_hdf54096/ -b  /software:/software / /software/sambanova/singularity/images/llm-modelzoo/Modelzoo/ModelzooDevbox_0.2.0.sif 
 ```
 Container startup output should look like:
 ```
@@ -102,7 +102,7 @@ python ./modelzoo/examples/nlp/text_generation/rdu_generate_text.py \
 command=compile \
 checkpoint.model_name_or_path=/software/models/Llama-2-7b-hf/ \
 samba_compile.output_folder=/home/$(whoami)/sambanova/out_generation \
-+samba_compile.target_sambaflow_version=$TARGET_SAMBAFLOW_VERSION #     =1.19.1
++samba_compile.target_sambaflow_version=LATEST
 ```
 
 Note: each compile will add a new subdirectory to the ouput folder (`/home/$(whoami)/sambanova/out_generation`), containing compile artifacts. The folder can be deleted when testing is complete;
@@ -184,9 +184,9 @@ python ./modelzoo/examples/nlp/training/utils/convert_ultrachat.py -src ultracha
 mv ~/sambanova/ultrachat_processed.jsonl ~/sambanova/ultrachat_processed_full.jsonl
 head -1000 ~/sambanova/ultrachat_processed_full.jsonl > ~/sambanova/ultrachat_processed.jsonl
 # This step makes a directory of hdf5 files from the single jsonl file
-export TOKENIZER="./Llama-2-7b-hf"
+export TOKENIZER="meta-llama/Llama-2-7b-hf"
 export MAX_SEQ_LENGTH=4096
-python -m generative_data_prep pipeline --input_file_path=./ultrachat_processed.jsonl --output_path=./ultrachat_dialogue --pretrained_tokenizer=${TOKENIZER} --max_seq_length=${MAX_SEQ_LEN}
+python -m generative_data_prep pipeline --input_file_path=./ultrachat_processed.jsonl --output_path=./ultrachat_dialogue --pretrained_tokenizer=${TOKENIZER} --max_seq_length=${MAX_SEQ_LENGTH}
 deactivate
 ```
 
@@ -227,7 +227,7 @@ python modelzoo/examples/nlp/training/rdu_train_llm.py \
     training.batch_size=${BATCH_SIZE} \
     samba_compile.arch=${ARCH} \
     samba_compile.output_folder=/home/$(whoami)/sambanova/out_train \
-    +samba_compile.target_sambaflow_version=$TARGET_SAMBAFLOW_VERSION
+    +samba_compile.target_sambaflow_version=LATEST
 ```
 
 Note: each compile will add a new subdirectory to the ouput folder (`/home/$(whoami)/sambanova/out_train`), containing compile artifacts. The folder can be deleted when testing is complete;

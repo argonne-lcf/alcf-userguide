@@ -44,6 +44,8 @@ export OMP_NUM_THREADS=16
 #fi
 if [ -e /opt/sambaflow/apps/image/unet ] ; then
     UNET=/opt/sambaflow/apps/image/unet
+elif [ -e /opt/sambaflow/apps/vision/segmentation/compile.py ] ; then
+    UNET=/opt/sambaflow/apps/vision/segmentation/
 elif [ -e /opt/sambaflow/apps/image/segmentation ] ; then
     UNET=/opt/sambaflow/apps/image/segmentation/
 else
@@ -72,9 +74,7 @@ if [ "${1}" == "compile" ] ; then
        rm ${OUTDIR}/unet_train_${BS}_${2}_single/unet_train_${BS}_${2}_single_${NUM_TILES}.pef
      fi
      if [ -e ${UNET}/compile.py ] ; then
-       COMMAND="python ${UNET}/compile.py compile --mac-v2 --in-channels=3 --in-width=${2} --in-height=${2} --batch-size=${BS} --enable-conv-tiling --num-tiles=4 --pef-name=unet_train_${BS}_${2}_single_${NUM_TILES} --output-folder=${OUTDIR}"
-        #1.15 python ${UNET}/compile.py compile -b ${BS}  --num-classes 2 --num-flexible-classes -1 --in-channels=3 --init-features 32 --in-width=${2} --in-height=${2} --enable-conv-tiling --mac-v2  --compiler-configs-file ${UNET}/jsons/compiler_configs/unet_compiler_configs_no_inst.json  --mac-human-decision ${UNET}/jsons/hd_files/hd_unet_${HD}_depth2colb.json --enable-stoc-rounding  --num-tiles ${NUM_TILES} --pef-name="unet_train_${BS}_${2}_single_${NUM_TILES}" > compile_${BS}_${2}_single_${NUM_TILES}.log 2>&1
-
+       COMMAND="python ${UNET}/compile.py compile --init-features 32 --in-channels=3 --num-classes 2 --num-flexible-classes 1 --in-width=${2} --in-height=${2} --batch-size=${BS} --enable-conv-tiling --mac-human-decision /opt/sambaflow/apps/vision/segmentation/jsons/hd_files/hd_unet_256_depth2colb.json --compiler-configs-file /opt/sambaflow/apps/vision/segmentation/jsons/compiler_configs/unet_compiler_configs_depth2colb.json --enable-stoc-rounding --num-tiles=4 --pef-name=unet_train_${BS}_${2}_single_${NUM_TILES} --output-folder=${OUTDIR}"	 
      else
 #old
        COMMAND="python ${UNET}/unet.py compile -b ${BS} --in-channels=${NUM_WORKERS} --in-width=${2} --in-height=${2} --enable-conv-tiling --mac-v2 --mac-human-decision ${UNET}/jsons/hd_files/hd_unet_${HD}_tgm.json --compiler-configs-file ${UNET}/jsons/compiler_configs/unet_compiler_configs_no_inst.json --pef-name="unet_train_${BS}_${2}_single" > compile_${BS}_${2}_single.log 2>&1"
@@ -90,9 +90,7 @@ elif [ "${1}" == "pcompile" ] ; then
      rm ${OUTDIR}/unet_train_${BS}_${2}_NP_${NUM_TILES}/unet_train_${BS}_${2}_NP_${NUM_TILES}.pef
    fi
    if [ -e ${UNET}/hook.py ] ; then
-     #python ${UNET}/compile.py compile -b ${BS}  --num-classes 2 --num-flexible-classes -1 --in-channels=3 --init-features 32 --in-width=${2} --in-height=${2} --enable-conv-tiling --mac-v2  --compiler-configs-file ${UNET}/jsons/compiler_configs/unet_compiler_configs_no_inst.json  --mac-human-decision ${UNET}/jsons/hd_files/hd_unet_${HD}_depth2colb.json --enable-stoc-rounding  --num-tiles ${NUM_TILES} --pef-name="unet_train_${BS}_${2}_NP_${NUM_TILES}" --data-parallel -ws 2 > compile_${BS}_${2}_NP_${NUM_TILES}.log 2>&1
-#1.16.2
-     COMMAND="python /opt/sambaflow/apps/image/segmentation/compile.py compile --mac-v2 --in-channels=3 --in-width=${2} --in-height=${2} --batch-size=${BS} --enable-conv-tiling --num-tiles=4 --pef-name=unet_train_${BS}_${2}_NP_${NUM_TILES}  --data-parallel -ws 2 --output-folder=${OUTDIR}"
+     COMMAND="python /opt/sambaflow/apps/vision/segmentation/compile.py compile --init-features 32 --in-channels=3 --num-classes 2 --num-flexible-classes 1 --in-width=${2} --in-height=${2} --batch-size=${BS} --enable-conv-tiling --mac-human-decision /opt/sambaflow/apps/vision/segmentation/jsons/hd_files/hd_unet_256_depth2colb.json --compiler-configs-file /opt/sambaflow/apps/vision/segmentation/jsons/compiler_configs/unet_compiler_configs_depth2colb.json --num-tiles=4 --pef-name=unet_train_${BS}_${2}_NP_${NUM_TILES}  --data-parallel -ws 2 --output-folder=${OUTDIR}"
    else
      COMMAND="python ${UNET}/unet.py compile -b ${BS} --in-channels=${NUM_WORKERS} --in-width=${2} --in-height=${2} --enable-conv-tiling --mac-v2 --mac-human-decision ${UNET}/jsons/hd_files/hd_unet_${HD}_tgm.json --compiler-configs-file ${UNET}/jsons/compiler_configs/unet_compiler_configs_no_inst.json --pef-name=unet_train_${BS}_${2}_NP  --data-parallel -ws 2 --output-folder=${OUTDIR}"
    fi
@@ -108,7 +106,7 @@ elif [ "${1}" == "run" ] ; then
    export SF_RNT_DMA_POLL_BUSY_WAIT=1
    #run single 
    if [ -e ${UNET}/hook.py ] ; then
-    COMMAND="srun --nodelist $(hostname) python /opt/sambaflow/apps/image/segmentation//hook.py run --data-cache=${CACHE_DIR}  --data-in-memory --num-workers=${NUM_WORKERS} --enable-tiling  --min-throughput 395 --in-channels=3 --in-width=${2} --in-height=${2} --init-features 32 --batch-size=${BS} --max-epochs 10 --data-dir ${DS} --log-dir log_dir_unet_${2}_${BS}_single_${NUM_TILES} --pef=${OUTDIR}/unet_train_${BS}_${2}_single_${NUM_TILES}/unet_train_${BS}_${2}_single_${NUM_TILES}.pef"
+    COMMAND="srun --nodelist $(hostname) python /opt/sambaflow/apps/vision/segmentation//hook.py run --data-cache=${CACHE_DIR}  --data-in-memory --num-workers=${NUM_WORKERS} --enable-tiling  --min-throughput 395 --in-channels=3 --in-width=${2} --in-height=${2} --init-features 32 --batch-size=${BS} --max-epochs 10 --data-dir ${DS} --log-dir log_dir_unet_${2}_${BS}_single_${NUM_TILES} --pef=${OUTDIR}/unet_train_${BS}_${2}_single_${NUM_TILES}/unet_train_${BS}_${2}_single_${NUM_TILES}.pef"
 
    else
      COMMAND="srun --nodelist $(hostname) python ${UNET}/unet_hook.py  run --num-workers=${NUM_WORKERS} --do-train --in-channels=3 --in-width=${2} --in-height=${2} --init-features 32 --batch-size=${BS} --epochs 10  --data-dir ${DS} --log-dir log_dir_unet_${2}_${3} --pef=${OUTDIR}/unet_train_${BS}_${2}_single/unet_train_${BS}_${2}_single.pef --use-sambaloader"

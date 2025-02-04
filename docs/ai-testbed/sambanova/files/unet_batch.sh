@@ -38,7 +38,7 @@ export OMP_NUM_THREADS=16
 if [ -e /opt/sambaflow/apps/image/unet ] ; then
   UNET=/opt/sambaflow/apps/image/unet
 elif [ -e /opt/sambaflow/apps/image/segmentation ] ; then
-  UNET=/opt/sambaflow/apps/image/segmentation/
+  UNET=/opt/sambaflow/apps/vision/segmentation/
 else
   echo "Cannot find UNET"
   exit
@@ -61,9 +61,7 @@ echo "Time: " $(date +%H:%M) >> ${OUTPUT_PATH} 2>&1
     export SF_RNT_DMA_POLL_BUSY_WAIT=1
     rm -rf log_dir_unet_${NP}_train_kaggle
     if [ -e ${UNET}/hook.py ] ; then
-    #orig   srun --mpi=pmi2 python ${UNET}/hook.py  run --data-cache-dir ${CACHE_DIR}  --num-workers=${NUM_WORKERS} --mode train --in-channels=3 --in-width=${IM} --in-height=${IM} --init-features 32 --batch-size=${BS} --epochs 10  --data-dir ${DS} --log-dir log_dir_unet_${IM}_${BS}_${NP} --pef=$(pwd)/out/unet_train_${BS}_${IM}_NP/unet_train_${BS}_${IM}_NP.pef --data-parallel --reduce-on-rdu --use-sambaloader > run_unet_${BS}_${IM}_${NP}.log 2>&1
-    #1.15.2 srun --mpi=pmi2 python ${UNET}/hook.py  run --data-in-memory --data-cache=${CACHE_DIR}  --num-workers=${NUM_WORKERS} --in-channels=3 --in-width=${IM} --in-height=${IM} --init-features 32 --batch-size=${BS} --epochs 10  --data-dir ${DS} --log-dir log_dir_unet_${IM}_${BS}_${NP} --data-parallel --reduce-on-rdu --pef=$(pwd)/out/unet_train_${BS}_${IM}_NP_4/unet_train_${BS}_${IM}_NP_4.pef > run_unet_${BS}_${IM}_${NP}_4.log 2>&1
-  COMMAND="srun --mpi=pmi2 python /opt/sambaflow/apps/image/segmentation//hook.py run --data-cache=${CACHE_DIR}  --data-in-memory --num-workers=${NUM_WORKERS} --enable-tiling  --min-throughput 395 --in-channels=3 --in-width=${IM} --in-height=${IM} --init-features 32 --batch-size=${BS} --max-epochs 10 --data-dir ${DS} --log-dir log_dir_unet_${IM}_${BS}_${NP} --data-parallel --reduce-on-rdu --pef=${OUTDIR}/unet_train_${BS}_${IM}_NP_4/unet_train_${BS}_${IM}_NP_4.pef"
+        COMMAND="srun --mpi=pmi2 python /opt/sambaflow/apps/vision/segmentation/hook.py run --data-cache=${CACHE_DIR}  --data-in-memory --num-workers=${NUM_WORKERS} --enable-tiling  --min-throughput 395 --in-channels=3 --in-width=${IM} --in-height=${IM} --init-features 32 --batch-size=${BS} --max-epochs 10 --data-dir ${DS} --log-dir log_dir_unet_${IM}_${BS}_${NP} --data-parallel --reduce-on-rdu --pef=${OUTDIR}/unet_train_${BS}_${IM}_NP_4/unet_train_${BS}_${IM}_NP_4.pef"
     else
         COMMAND="srun --mpi=pmi2 python ${UNET}/unet_hook.py  run --data-cache-dir ${CACHE_DIR} --num-workers=${NUM_WORKERS} --do-train --in-channels=3 --in-width=${IM} --in-height=${IM} --init-features 32 --batch-size=${BS} --epochs 10  --data-dir ${DS} --log-dir log_dir_unet_${IM}_${BS}_${NP} --pef=$(pwd)/out/unet_train_${BS}_${IM}_NP/unet_train_${BS}_${IM}_NP.pef --data-parallel --reduce-on-rdu --use-sambaloader > run_unet_${BS}_${IM}_${NP}.log 2>&1"
     fi

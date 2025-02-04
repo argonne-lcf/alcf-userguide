@@ -96,7 +96,7 @@ cd ~/nlp-multiNodetest
 ### Create and run Gpt1.5B_compile.sh and Gpt1.5B_run.sh
 
 Create the files **Gpt1.5B_compile.sh** and **Gpt1.5B_run.sh** in the current directory.
-Copy the contents of [Gpt1.5B_compile.sh](./files/Gpt1.5B_compile.sh) and [Gpt1.5B_run.sh](./files/Gpt1.5B_run.sh). Alternatively, the files can be accessed at `/data/ANL/scripts/Gpt1.5B_compile.sh` and `/data/ANL/scripts/Gpt1.5B_run.sh` on any of the compute node and can be copied over to the working directory.
+Copy the contents of [Gpt1.5B_compile.sh](./files/Gpt1.5B_compile.sh) and [Gpt1.5B_run.sh](./files/Gpt1.5B_run.sh). Alternatively, the files can be accessed at `/data/ANL/scripts/1.23.5-46/legacy_models/Gpt1.5B_compile.sh` and `/data/ANL/scripts/1.23.5-46/legacy_models/Gpt1.5B_run.sh` on any of the compute node and can be copied over to the working directory.
 
 ### Compile and Run
 
