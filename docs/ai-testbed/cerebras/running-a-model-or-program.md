@@ -19,7 +19,7 @@ man tmux
 
 ## Running jobs on the wafer
 
-Follow these instructions to compile and train the `fc_mnist` PyTorch sample. This models is a couple of fully connected layers plus dropout and RELU. <br>
+Follow these instructions to compile and train a small (111m parameters) GPT3 model.
 
 ### Cerebras virtual environments
 
@@ -67,7 +67,7 @@ if [ -d "$MODEL_DIR" ]; then rm -Rf $MODEL_DIR; fi
 python run.py CSX --job_labels name=gpt3_111m --params configs/Cerebras_GPT/111m_modified.yaml --num_csx=1 --mode train --model_dir $MODEL_DIR --mount_dirs /home/ /software --python_paths /home/$(whoami)/R_2.4.0/modelzoo/src --compile_dir $(whoami) |& tee mytest.log
 ```
 
-A successful fc_mnist PyTorch training run should finish with output resembling the following:
+A successful GPT3 (111m parameters) PyTorch training run should finish with output resembling the following:
 
 ```text
 2023-11-29 18:13:13,048 INFO:   | Train Device=CSX, Step=1950, Loss=2.28834, Rate=397.31 samples/sec, GlobalRate=433.98 samples/sec
