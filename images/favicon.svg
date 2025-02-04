@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128mm"
+   height="128mm"
+   viewBox="0 0 127.99999 128"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="anl-favicon-128x128.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.41490365"
+     inkscape:cx="-671.24018"
+     inkscape:cy="395.27249"
+     inkscape:window-width="1624"
+     inkscape:window-height="1229"
+     inkscape:window-x="0"
+     inkscape:window-y="44"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-200.05514,-66.659093)">
+    <g
+       id="g1"
+       transform="matrix(7.9415793,0,0,7.9415793,-824.34137,-1231.432)">
+      <polygon
+         class="cls-hole"
+         points="254.19,32.95 265.11,51.86 243.27,51.86 "
+         id="polygon1"
+         transform="matrix(0.26251352,0,0,0.26251352,70.276331,160.43307)"
+         style="fill:#ffffff;fill-opacity:1" />
+      <g
+         id="_Group_"
+         data-name="&lt;Group&gt;"
+         transform="matrix(0.26251352,0,0,0.26251352,70.276331,160.43307)">
+        <polygon
+           id="_Path_"
+           data-name="&lt;Path&gt;"
+           class="cls-3"
+           points="225.15,50.31 234.83,67.07 244.51,50.31 "
+           style="fill:#007836" />
+        <path
+           id="_Compound_Path_"
+           data-name="&lt;Compound Path&gt;"
+           class="cls-4"
+           d="m 263.87,50.31 h -19.36 l -9.68,16.77 h 38.72 z"
+           style="fill:#0082ca" />
+        <polygon
+           id="_Path_2"
+           data-name="&lt;Path&gt;"
+           class="cls-5"
+           points="263.87,50.31 273.55,67.07 283.23,50.31 "
+           style="fill:#0b1f8f" />
+        <polygon
+           id="_Path_3"
+           data-name="&lt;Path&gt;"
+           class="cls-1"
+           points="244.51,50.31 254.19,33.54 263.87,50.31 "
+           style="fill:none" />
+        <polygon
+           id="_Path_4"
+           data-name="&lt;Path&gt;"
+           class="cls-6"
+           points="244.51,16.77 254.19,33.54 263.87,16.77 "
+           style="fill:#a12b2f" />
+        <polygon
+           id="_Path_5"
+           data-name="&lt;Path&gt;"
+           class="cls-7"
+           points="263.87,50.3 263.87,50.31 283.23,50.31 263.87,16.77 254.19,33.54 "
+           style="fill:#cd202c" />
+        <path
+           id="_Compound_Path_2"
+           data-name="&lt;Compound Path&gt;"
+           class="cls-8"
+           d="m 244.51,50.31 9.68,-16.77 -9.68,-16.77 -19.36,33.54 z"
+           style="fill:#77b300" />
+      </g>
+    </g>
+  </g>
+</svg>
