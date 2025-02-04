@@ -2,27 +2,60 @@ site_name: ALCF User Guides
 repo_name: 'argonne-lcf/user-guides'
 repo_url: 'https://github.com/argonne-lcf/user-guides'
 site_url: 'https://docs.alcf.anl.gov/'
+edit_uri: 'edit/main/docs/'
 
 theme:
   name: 'material'
   custom_dir: overrides
   language: 'en'
   palette:
-    scheme: alcf
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: alcf
+      primary: custom
+      accent: custom
+
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
   font:
-    text: proxima-nova
+    text: proxima-nova   # removed in #545. remove again?
+
   features:
-    - tabs
-    - instant
-    - search.highlight
-    - navigation.sections
-    - navigation.path
-    - navigation.indexes
-    - toc.follow
-    - search.suggest
+    - content.action.edit
+    - content.action.view
     - content.code.copy
     - content.code.annotate
     #- content.code.select # experimental
+    - instant
+    - navigation.indexes
+    - navigation.path
+    # - navigation.prune
+    #- navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - navigation.sections
+    - tabs
+    - toc.follow
+    - toc.integrate
+    - search.highlight
+    - search.suggest
+
   logo: images/logo.svg
   favicon: "images/favicon.svg"
 
@@ -61,11 +94,14 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.tabbed:
       alternate_style: true
+      combine_header_slug: true
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.blocks.definition
   - pymdownx.blocks.caption
 
+  - toc:
+      permalink: true
 validation:
   omitted_files: warn
   absolute_links: warn
@@ -74,9 +110,12 @@ validation:
   not_found: warn
 
 extra:
+  homepage: 'https://docs.alcf.anl.gov'
   social:
     - icon: 'fontawesome/brands/github-alt'
       link: 'https://github.com/argonne-lcf/user-guides'
+    - icon: 'fontawesome/brands/x-twitter'
+      link: 'https://x.com/argonne_lcf'
   analytics:
     provider: google
     property: G-4M48E2L33R
@@ -87,6 +126,9 @@ plugins:
       title_mode: pymdownx.tabbed
   - search:
       lang: en
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - minify:
+      minify_html: true
 
 nav:
   - ALCF User Guides:
@@ -120,22 +162,88 @@ nav:
       - HPSS: data-management/filesystem-and-storage/hpss.md
       - Disk Quota: data-management/filesystem-and-storage/disk-quota.md
 
-  - Facility Policies:
-    - Overview of Policies: policies/facility-policies.md
-    - ALCF Acknowledgement Policy: policies/alcf-acknowledgement-policy.md
-    - Account Policies:
-      - Accounts Policy: policies/accounts/accounts-policy.md
-      - Account Sponsorship & Retention Policy: policies/accounts/account-sponsorship-retention-policy.md
-      - User Authentication Policy: policies/accounts/user-authentication-policy.md
-    - Queue and Scheduling Policies:
-      - Queue and Scheduling Policy: policies/queue-scheduling/queue-and-scheduling-policy.md
-      - Refund Policy: policies/queue-scheduling/refund-policy.md
-      - Pullback Policy: policies/queue-scheduling/pullback-policy.md
-    - Data and Software Policies:
-      - Data Policy: policies/data-and-software-policies/data-policy.md
-      - Software Policy: policies/data-and-software-policies/software-policy.md
+  - Running Jobs with PBS at the ALCF:
+      - Job Scheduling and Execution: running-jobs/job-and-queue-scheduling.md
+      - Example Job Scripts: running-jobs/example-job-scripts.md
+      - Machine Reservations: running-jobs/machine-reservations.md
+      - Cobalt to PBS option Comparison: running-jobs/pbs-qsub-options-table.md
 
   - Machines:
+    - Aurora:
+        - Getting Started: aurora/getting-started-on-aurora.md
+        - Aurora Programming Environment: aurora/aurora-pe.md
+        - Early User Notes and Known Issues: aurora/known-issues.md
+        - Machine Overview: aurora/hardware-overview/machine-overview.md
+        - Node Performance Overview: aurora/node-performance-overview/node-performance-overview.md
+        - Compiling and Linking:
+          - Compiling and Linking Overview: aurora/compiling-and-linking/compiling-and-linking-overview.md
+          - Programming Models: aurora/compiling-and-linking/aurora-programming-models.md
+          - Example Program and Makefile: aurora/compiling-and-linking/aurora-example-program-makefile.md
+        # - LLVM Compilers: aurora/compiling-and-linking/llvm-compilers-aurora.md
+        # - GNU Compilers: aurora/compiling-and-linking/gnu-compilers-aurora.md
+        # - CCE Compilers: aurora/compiling-and-linking/cce-compilers-aurora.md
+        - Build Tools:
+          - CMake: aurora/build-tools/cmake-aurora.md
+        - Running Jobs: aurora/running-jobs-aurora.md
+        - Data Management:
+          - Copper: aurora/data-management/copper/copper.md
+          - DAOS: aurora/data-management/daos/daos-overview.md
+          - Lustre (Flare): aurora/data-management/lustre/flare.md
+          - Moving data to Aurora:
+            - DAOS Data Mover: aurora/data-management/moving_data_to_aurora/daos_datamover.md
+            - Globus: aurora/data-management/moving_data_to_aurora/globus.md
+            - SCP: aurora/data-management/moving_data_to_aurora/scp.md
+        - Applications and Libraries:
+          - Libraries:
+            - Cabana: aurora/applications-and-libraries/libraries/cabana-aurora.md
+            #- Math Libraries: aurora/applications-and-libraries/libraries/math-libraries.md
+            #- MKL: aurora/applications-and-libraries/libraries/mkl.md
+            #- MPI: aurora/applications-and-libraries/libraries/mpi.md
+            - oneDAL: aurora/applications-and-libraries/libraries/onedal.md
+            - Spack PE: aurora/applications-and-libraries/libraries/spack-pe.md
+        - Containers: aurora/containers/containers.md
+        - Data Science:
+          - Python: aurora/data-science/python.md
+          - Jupyter: aurora/data-science/jupyter.md
+          - Profiling: aurora/data-science/profiling_dl.md
+          - Frameworks:
+            - DeepSpeed: aurora/data-science/frameworks/deepspeed.md
+            - Megatron-DeepSpeed: aurora/data-science/frameworks/megatron-deepspeed.md
+            - PyTorch: aurora/data-science/frameworks/pytorch.md
+            - TensorFlow: aurora/data-science/frameworks/tensorflow.md
+            - Dask: aurora/data-science/frameworks/dask.md
+            - oneCCL: aurora/data-science/frameworks/oneCCL.md
+            - scikit-learn: aurora/data-science/frameworks/scikit-learn.md
+            - oneDAL: aurora/applications-and-libraries/libraries/onedal.md
+            - GPyTorch: aurora/data-science/frameworks/gpytorch.md
+            - PyTorch Geometric (PyG): aurora/data-science/frameworks/pyg.md
+          - AI Inference:
+            - LibTorch: aurora/data-science/inference/libtorch.md
+            - OpenVINO: aurora/data-science/inference/openvino.md
+        - Programming Models:
+          - Kokkos: aurora/programming-models/kokkos-aurora.md
+          - Level Zero: aurora/programming-models/level-0.md
+          - OpenCL: aurora/programming-models/opencl-aurora.md
+          - OpenMP: aurora/programming-models/openmp-aurora.md
+          - SYCL: aurora/programming-models/sycl-aurora.md
+        - Debugging Tools:
+          - Overview: aurora/debugging/debugging-overview.md
+          - gdb-oneapi: aurora/debugging/gdb-oneapi.md
+          - DDT: aurora/debugging/ddt-aurora.md
+          - gdb4hpc: aurora/debugging/gdb4hpc.md
+        - Performance Tools:
+        #  - Overview: aurora/performance-tools/performance-overview.md
+          - Advisor: aurora/performance-tools/advisor.md
+          - VTune: aurora/performance-tools/vtune.md
+        # - Visualization:
+        #   - ParaView: aurora/visualization/paraview.md
+        - Services:
+          - GitLab: aurora/services/gitlab-ci.md
+        - Workflows:
+          - ADIOS2: aurora/workflows/adios.md
+          - Balsam: aurora/workflows/balsam.md
+          - Parsl: aurora/workflows/parsl.md
+          - SmartSim: aurora/workflows/smartsim.md
 
     - AI Testbed:
       - Getting Started: ai-testbed/getting-started.md
@@ -183,90 +291,6 @@ nav:
         # - Performance Tools: ai-testbed/sambanova/performance-tools.md
       - Data Management: ai-testbed/data-management/data-management-overview.md
 
-    - Aurora:
-        - Getting Started: aurora/getting-started-on-aurora.md
-        - Aurora Programming Environment: aurora/aurora-pe.md
-        - Early User Notes and Known Issues: aurora/known-issues.md
-        - Machine Overview: aurora/hardware-overview/machine-overview.md
-        - Node Performance Overview: aurora/node-performance-overview/node-performance-overview.md
-        - Compiling and Linking:
-          - Compiling and Linking Overview: aurora/compiling-and-linking/compiling-and-linking-overview.md
-          - Programming Models: aurora/compiling-and-linking/aurora-programming-models.md
-          - Example Program and Makefile: aurora/compiling-and-linking/aurora-example-program-makefile.md
-        # - LLVM Compilers: aurora/compiling-and-linking/llvm-compilers-aurora.md
-        # - GNU Compilers: aurora/compiling-and-linking/gnu-compilers-aurora.md
-        # - CCE Compilers: aurora/compiling-and-linking/cce-compilers-aurora.md
-        # - Continuous Integration: aurora/compiling-and-linking/continuous-integration-aurora.md
-        - Build Tools:
-          - CMake: aurora/build-tools/cmake-aurora.md
-        - Running Jobs: aurora/running-jobs-aurora.md
-        - Data Management:
-          - Copper: aurora/data-management/copper/copper.md
-          - DAOS: aurora/data-management/daos/daos-overview.md
-          - Lustre (Flare): aurora/data-management/lustre/flare.md
-          - Moving data to Aurora:
-            - DAOS Data Mover: aurora/data-management/moving_data_to_aurora/daos_datamover.md
-            - Globus: aurora/data-management/moving_data_to_aurora/globus.md
-            - SCP: aurora/data-management/moving_data_to_aurora/scp.md
-        - Applications and Libraries:
-          - Libraries:
-            - Cabana: aurora/applications-and-libraries/libraries/cabana-aurora.md
-            #- Math Libraries: aurora/applications-and-libraries/libraries/math-libraries.md
-            #- MKL: aurora/applications-and-libraries/libraries/mkl.md
-            #- MPI: aurora/applications-and-libraries/libraries/mpi.md
-            - oneDAL: aurora/applications-and-libraries/libraries/onedal.md
-            - Spack PE: aurora/applications-and-libraries/libraries/spack-pe.md
-        - Containers: aurora/containers/containers.md
-        - Data Science:
-          #- Julia: aurora/data-science/julia.md
-          - Python: aurora/data-science/python.md
-          - Jupyter: aurora/data-science/jupyter.md
-          #- Applications:
-            #- gpt-neox: aurora/data-science/applications/gpt-neox.md
-          - Profiling: aurora/data-science/profiling_dl.md
-          - Frameworks:
-            - DeepSpeed: aurora/data-science/frameworks/deepspeed.md
-            - Megatron-DeepSpeed: aurora/data-science/frameworks/megatron-deepspeed.md
-            #- JAX: aurora/data-science/frameworks/jax.md
-            - PyTorch: aurora/data-science/frameworks/pytorch.md
-            - TensorFlow: aurora/data-science/frameworks/tensorflow.md
-            - Dask: aurora/data-science/frameworks/dask.md
-            - oneCCL: aurora/data-science/frameworks/oneCCL.md
-            - scikit-learn: aurora/data-science/frameworks/scikit-learn.md
-            - oneDAL: aurora/applications-and-libraries/libraries/onedal.md
-            - GPyTorch: aurora/data-science/frameworks/gpytorch.md
-            - PyTorch Geometric (PyG): aurora/data-science/frameworks/pyg.md
-          - AI Inference:
-            - LibTorch: aurora/data-science/inference/libtorch.md
-            - OpenVINO: aurora/data-science/inference/openvino.md
-        - Programming Models:
-          - Kokkos: aurora/programming-models/kokkos-aurora.md
-          - Level Zero: aurora/programming-models/level-0.md
-          - OpenCL: aurora/programming-models/opencl-aurora.md
-          - OpenMP: aurora/programming-models/openmp-aurora.md
-          #- RAJA: aurora/programming-models/raja-aurora.md
-          - SYCL: aurora/programming-models/sycl-aurora.md
-        - Debugging Tools:
-          - Overview: aurora/debugging/debugging-overview.md
-          - gdb-oneapi: aurora/debugging/gdb-oneapi.md
-          - DDT: aurora/debugging/ddt-aurora.md
-          - gdb4hpc: aurora/debugging/gdb4hpc.md
-        - Performance Tools:
-        #  - Overview: aurora/performance-tools/performance-overview.md
-          - Advisor: aurora/performance-tools/advisor.md
-          - VTune: aurora/performance-tools/vtune.md
-        # - Visualization:
-        #   - ParaView: aurora/visualization/paraview.md
-        - Services:
-          - GitLab: aurora/services/gitlab-ci.md
-          #- JupyterHub: aurora/services/jupyterhub.md
-        - Workflows:
-          - ADIOS2: aurora/workflows/adios.md
-          - Balsam: aurora/workflows/balsam.md
-          # - DeepHyper: aurora/workflows/deephyper.md
-          # - libEnsemble: aurora/workflows/libensemble.md
-          - Parsl: aurora/workflows/parsl.md
-          - SmartSim: aurora/workflows/smartsim.md
     - Crux:
       - Machine Overview: crux/hardware-overview/machine-overview.md
       - Getting Started: crux/getting-started.md
@@ -375,17 +399,27 @@ nav:
       - General: services/continuous-integration.md
       - Gitlab-CI: services/gitlab-ci.md
 
-  - Running Jobs with PBS at the ALCF:
-      - Job Scheduling and Execution: running-jobs/job-and-queue-scheduling.md
-      - Example Job Scripts: running-jobs/example-job-scripts.md
-      - Machine Reservations: running-jobs/machine-reservations.md
-      - Cobalt to PBS option Comparison: running-jobs/pbs-qsub-options-table.md
+  - Facility Policies:
+    - Overview of Policies: policies/facility-policies.md
+    - ALCF Acknowledgement Policy: policies/alcf-acknowledgement-policy.md
+    - Account Policies:
+      - Accounts Policy: policies/accounts/accounts-policy.md
+      - Account Sponsorship & Retention Policy: policies/accounts/account-sponsorship-retention-policy.md
+      - User Authentication Policy: policies/accounts/user-authentication-policy.md
+    - Queue and Scheduling Policies:
+      - Queue and Scheduling Policy: policies/queue-scheduling/queue-and-scheduling-policy.md
+      - Refund Policy: policies/queue-scheduling/refund-policy.md
+      - Pullback Policy: policies/queue-scheduling/pullback-policy.md
+    - Data and Software Policies:
+      - Data Policy: policies/data-and-software-policies/data-policy.md
+      - Software Policy: policies/data-and-software-policies/software-policy.md
 
   - Questions / Issues: issues.md
 
 not_in_nav: |
   not_in_nav/
   unused/
+  old/
   todo.md
   TODO.md
   notes.md
@@ -393,17 +427,9 @@ not_in_nav: |
   llvm-compilers-aurora.md
   gnu-compilers-aurora.md
   cce-compilers-aurora.md
-  continuous-integration-aurora.md
   aurora/applications-and-libraries/libraries/math-libraries.md
   aurora/applications-and-libraries/libraries/mkl.md
   aurora/applications-and-libraries/libraries/mpi.md
-  aurora/data-science/julia.md
-  aurora/data-science/applications/gpt-neox.md
-  aurora/data-science/frameworks/jax.md
-  aurora/programming-models/raja-aurora.md
   aurora/performance-tools/performance-overview.md
   aurora/visualization/paraview.md
-  aurora/services/jupyterhub.md
   aurora/workflows/balsam.md
-  aurora/workflows/deephyper.md
-  aurora/workflows/libensemble.md
