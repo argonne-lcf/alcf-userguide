@@ -4,6 +4,5 @@ All software used on ALCF computers must be appropriately acquired and used acco
 
 ## Community Software Policy
 
-ALCF supports the deployment of community software from active projects on production systems. A project may provide and support a code on ALCF systems for the ALCF user community as described in the [Community Software Service].
-
+ALCF supports the deployment of community software from active projects on production systems. 
 User deployments are system-specific, and their maintenance is the sole responsibility of the project deploying it. There shall be no expectation of additional support from ALCF, other than for the provisioning of space and integration with the module system. Projects will be provided with an initial module file from a template, with the expectation that they will update and maintain the module, providing paths and instructions so that user communities can access the software.

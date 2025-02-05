@@ -149,6 +149,7 @@ nav:
         #- Performance Tools: ai-testbed/cerebras/performance-tools.md
         - Tunneling and Forwarding Ports: ai-testbed/cerebras/tunneling-and-forwarding-ports.md
         - Miscellaneous: ai-testbed/cerebras/miscellaneous.md
+        - CSL: ai-testbed/cerebras/csl.md        
       - Graphcore:
         - System Overview: ai-testbed/graphcore/system-overview.md
         - Getting Started: ai-testbed/graphcore/getting-started.md

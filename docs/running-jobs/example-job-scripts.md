@@ -67,7 +67,7 @@ The following function in the `hello_affinity` source code is essential for uniq
 <!-- END COMPARISON -->
 
 !!! warning inline end "Zsh users"
-    If you are a `zsh` user, you will need to ensure **all** PBS job submission and shell scripts include the `-l` flag following `#!/bin/bash` as seen in the example above to ensure your environment is being instantiated properly. `zsh` is **not** officially supported by HPE and support from ALCF will be best effort only.*
+    If you are a `zsh` user, you will need to ensure **all** PBS job submission and shell scripts include the `-l` flag following `#!/bin/bash` as seen in the example above to ensure your environment is being instantiated properly. `zsh` is **not** officially supported by HPE and support from ALCF will be best effort only.
 
 Each Polaris compute node has 1 Milan CPU with a total of 32 physical cores, with each core supporting 2 hardware threads (for a total of 64 logical cores).
 
